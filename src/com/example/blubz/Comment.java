@@ -8,6 +8,7 @@ public class Comment {
 
     private long id;
     private String comment;
+    private long timestamp;
 
     public long getId(){
         return id;
@@ -24,6 +25,12 @@ public class Comment {
     public void setComment(String comment){
         this.comment = comment;
     }
+
+    public long getTimestamp() {return timestamp;}
+
+    public void setTimestamp(long timestamp) {this.timestamp = timestamp;}
+
+
 
     // Will be used by the ArrayAdapter in the ListView
     @Override

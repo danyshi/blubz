@@ -19,7 +19,7 @@ public class CommentsDataSource {
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
     private String[] allColumns = { MySQLiteHelper.COLUMN_ID,
-            MySQLiteHelper.COLUMN_COMMENT};
+            MySQLiteHelper.COLUMN_COMMENT, MySQLiteHelper.COLUMN_TIMESTAMP};
 
     public CommentsDataSource(Context context){
         dbHelper = new MySQLiteHelper(context);
@@ -33,17 +33,19 @@ public class CommentsDataSource {
         dbHelper.close();
     }
 
-    public Comment createComment(String comment){
+    public Comment createComment(String comment, long timestamp){
         ContentValues values = new ContentValues();
         values.put(MySQLiteHelper.COLUMN_COMMENT, comment);
+        values.put(MySQLiteHelper.COLUMN_TIMESTAMP, timestamp);
         long insertId = database.insert(MySQLiteHelper.TABLE_COMMENTS, null,
                 values);
-        Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
+
+        /*Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
                 allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
-                null, null, null);
-        cursor.moveToFirst();
-        Comment newComment = cursorToComment(cursor);
-        cursor.close();
+                null, null, null);*/
+
+        Comment newComment = new Comment();// = cursorToComment(cursor);
+        //cursor.close();
         return newComment;
     }
 
@@ -57,8 +59,13 @@ public class CommentsDataSource {
     public List<Comment> getAllComments(){
         List<Comment> comments = new ArrayList<Comment>();
 
+        /**
         Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
                 allColumns, null, null, null, null, null);
+        **/
+        String query = "Select * FROM " + MySQLiteHelper.TABLE_COMMENTS;
+
+        Cursor cursor = database.rawQuery(query, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
@@ -69,13 +76,32 @@ public class CommentsDataSource {
 
         // Make sure to close the cursor
         cursor.close();
+
         return comments;
+    }
+
+    public long getMostRecentTimestamp(){
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
+                allColumns, null, null, null, null, null);
+        cursor.moveToLast();
+        Comment comment = cursorToComment(cursor);
+
+        return comment.getTimestamp();
+    }
+
+    public boolean isEmpty(){
+        Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
+               allColumns, null, null, null, null, null);
+        return(cursor.getCount() == 0);
+        //return(cursor.getCount()); //TODO: make a better implementation
+        //return false;
     }
 
     private Comment cursorToComment(Cursor cursor){
         Comment comment = new Comment();
         comment.setId(cursor.getLong(0));
         comment.setComment(cursor.getString(1));
+        comment.setTimestamp(cursor.getLong(2));
         return comment;
     }
 }
