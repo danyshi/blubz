@@ -5,6 +5,7 @@
     <string name="add">Add a Journal</string>
     <string name="add_message">Add Message</string>
     <string name="add_picture">Add Picture</string>
+    <string name="add_content">Returned Content</string>
     <string name="title">BLUBZ</string>
     <string name="view_message">Your Messages:</string>
 </resources>

@@ -23,4 +23,8 @@ public class MainScreen extends Activity {
     public void goToPicture(View view) {
         // Add camera stuff here
     }
+
+    public void goToReturnMessage(View view) {
+        // Add return context here
+    }
 }
