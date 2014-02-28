@@ -21,10 +21,11 @@ public class MainScreen extends Activity {
     }
 
     public void goToPicture(View view) {
-        // Add camera stuff here
+        Intent intent = new Intent(this, PhotoIntentActivity.class);
+        startActivity(intent);
     }
 
     public void goToReturnMessage(View view) {
-        // Add return context here
+        // Add return content stuff here
     }
 }
